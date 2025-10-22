@@ -1,33 +1,81 @@
-extends RigidBody2D
+extends Node2D
 
-@onready var original_sprite := $Sprite2D
+@onready var original_sprite := $RigidBody/Sprite2D
 @onready var original_image:Image = original_sprite.texture.get_image()
 
-const SMASH_ANGLE_DEVIATION_START := 14
+const SMASH_ANGLE_DEVIATION_START := 24
 const SMASH_ANGLE_DEVIATION_RATE := -2
 
 func smash(num_pieces: int):
 	var prev_angle := 0.0
+	
 	for i in num_pieces:
-		var sprite := Sprite2D.new()
-		var image := Image.create_empty(original_image.get_width(), original_image.get_height(), original_image.has_mipmaps(), original_image.get_format())
-		var cur_angle := 0.0
-		if i == num_pieces:
-			cur_angle = 360
+		var asteroid_chunk := RigidBody2D.new()
+		
+		var cur_angle:float
+		if i == num_pieces-1:
+			cur_angle = 360.0
 		else:
-			cur_angle = prev_angle + randfn(360/float(num_pieces), SMASH_ANGLE_DEVIATION_START+(SMASH_ANGLE_DEVIATION_RATE*num_pieces))
-		for x in original_image.get_width():
-			for y in original_image.get_height():
-				var angle_of_pixel := atan2(y, x)
-				if original_sprite.is_pixel_opaque(Vector2(x, y)) and angle_of_pixel > prev_angle and angle_of_pixel <= cur_angle:
+			cur_angle = prev_angle + randfn(360.0/num_pieces, SMASH_ANGLE_DEVIATION_START+SMASH_ANGLE_DEVIATION_RATE*num_pieces)
+		
+		var sprite := generate_chunk_sprite(prev_angle, cur_angle)
+		asteroid_chunk.add_child(sprite)
+		
+		var collider := generate_chunk_collider(prev_angle, cur_angle)
+		asteroid_chunk.add_child(collider)
+		
+		add_child(asteroid_chunk)
+		
+		prev_angle = cur_angle
+	$RigidBody.queue_free()
+
+func generate_chunk_sprite(prev_angle: float, cur_angle:float) -> Sprite2D:
+	prev_angle -= 180
+	cur_angle -= 180
+	var sprite := Sprite2D.new()
+	var image := Image.create_empty(original_image.get_width(), original_image.get_height(), original_image.has_mipmaps(), original_image.get_format())
+	
+	for x in original_image.get_width():
+		for y in original_image.get_height():
+			var cords_in_original := Vector2(x-(original_image.get_width()/2.0), y-(original_image.get_width()/2.0))
+			var angle_of_pixel := rad_to_deg(atan2(cords_in_original.y, cords_in_original.x))
+			if angle_of_pixel >= prev_angle and angle_of_pixel < cur_angle and original_sprite.is_pixel_opaque(cords_in_original):
+				if !((abs(angle_of_pixel-prev_angle) < 5 or abs(angle_of_pixel-cur_angle) < 5) and randf() > (sqrt(pow(x, 2)+pow(y, 2)))/(sqrt(pow(original_image.get_width(), 2)+pow(original_image.get_height(), 2)))):
 					image.set_pixel(x, y, original_image.get_pixel(x, y))
-		prev_angle += cur_angle
-		sprite.texture = ImageTexture.create_from_image(image)
-		sprite.global_position = Vector2(20*i, 75)
-		add_child(sprite)
+	
+	sprite.texture = ImageTexture.create_from_image(image)
+	return sprite
 
+func generate_chunk_collider(prev_angle: float, cur_angle:float) -> CollisionPolygon2D:
+	var collider := CollisionPolygon2D.new()
+	var polygon: PackedVector2Array
+	var radius := sqrt(pow(original_image.get_width()/2.8, 2)+pow(original_image.get_height()/2.8, 2))
+	
+	polygon.append(Vector2(-radius*cos(deg_to_rad(prev_angle)), -radius*sin(deg_to_rad(prev_angle))))
+	polygon.append(Vector2(-radius*cos(deg_to_rad(cur_angle)), -radius*sin(deg_to_rad(cur_angle))))
+	polygon.append(Vector2(0, 0))
+	
+	collider.set_polygon(polygon)
+	
+	return collider
 
-func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
+func test():
+	var sprite := Sprite2D.new()
+	var image := Image.create_empty(original_image.get_width(), original_image.get_height(), original_image.has_mipmaps(), original_image.get_format())
+	for x in original_image.get_width():
+		for y in original_image.get_height():
+			var angle_of_pixel := rad_to_deg(atan2(y-(original_image.get_width()/2.0), x-(original_image.get_height()/2.0)))
+			#print("x ",x," y ", y, " angle ",angle_of_pixel)
+			if angle_of_pixel >= -180 and angle_of_pixel < 0 and original_sprite.is_pixel_opaque(Vector2(x-(original_image.get_width()/2.0), y-(original_image.get_height()/2.0))):
+				image.set_pixel(x, y, Color.RED)
+			else:
+				image.set_pixel(x, y, original_image.get_pixel(x, y))
+			print("x ",x," y ", y, " ", 1-(sqrt(pow(x, 2)+pow(y, 2)))/(sqrt(pow(original_image.get_width(), 2)+pow(original_image.get_height(), 2))))
+	sprite.texture = ImageTexture.create_from_image(image)
+	sprite.global_position = Vector2(20, 20)
+	add_child(sprite)
+
+func _on_rigid_body_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event.is_action_pressed("left_click"):
-		print(3)
-		smash(3)
+		smash(6)
+		#test()

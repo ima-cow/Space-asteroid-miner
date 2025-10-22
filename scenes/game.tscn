@@ -7,16 +7,17 @@
 
 [node name="Game" type="Node"]
 
-[node name="Asteroid" type="RigidBody2D" parent="."]
-position = Vector2(108, 64)
-input_pickable = true
-gravity_scale = 0.0
+[node name="Asteroid" type="Node2D" parent="."]
+position = Vector2(100, 100)
 script = ExtResource("1_uwrxv")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Asteroid"]
+[node name="RigidBody" type="RigidBody2D" parent="Asteroid"]
+input_pickable = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Asteroid/RigidBody"]
 shape = SubResource("CircleShape2D_lnu2h")
 
-[node name="Sprite2D" type="Sprite2D" parent="Asteroid"]
+[node name="Sprite2D" type="Sprite2D" parent="Asteroid/RigidBody"]
 texture = ExtResource("2_yqjtg")
 
-[connection signal="input_event" from="Asteroid" to="Asteroid" method="_on_input_event"]
+[connection signal="input_event" from="Asteroid/RigidBody" to="Asteroid" method="_on_rigid_body_input_event"]
