@@ -1,23 +1,22 @@
 [gd_scene load_steps=4 format=3 uid="uid://deidliikifwik"]
 
-[ext_resource type="Script" uid="uid://dpx727y447wvh" path="res://scripts/asteroid.gd" id="1_uwrxv"]
-[ext_resource type="Texture2D" uid="uid://24noxarump8g" path="res://assets/pixil-frame-0.png" id="2_yqjtg"]
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_lnu2h"]
+[ext_resource type="PackedScene" uid="uid://stex3fnk2qly" path="res://scenes/asteroid.tscn" id="1_yqjtg"]
+[ext_resource type="Script" uid="uid://b6j5dpnb4ntek" path="res://scripts/ship_movement.gd" id="2_lbhrr"]
+[ext_resource type="Texture2D" uid="uid://dvmr3c6ujqyhv" path="res://assets/ship.png" id="2_lnu2h"]
 
 [node name="Game" type="Node"]
 
-[node name="Asteroid" type="Node2D" parent="."]
-position = Vector2(100, 100)
-script = ExtResource("1_uwrxv")
+[node name="Camera2D" type="Camera2D" parent="."]
 
-[node name="RigidBody" type="RigidBody2D" parent="Asteroid"]
-input_pickable = true
+[node name="Ship" type="RigidBody2D" parent="."]
+position = Vector2(48, 52)
+script = ExtResource("2_lbhrr")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Asteroid/RigidBody"]
-shape = SubResource("CircleShape2D_lnu2h")
+[node name="Sprite2D" type="Sprite2D" parent="Ship"]
+texture = ExtResource("2_lnu2h")
 
-[node name="Sprite2D" type="Sprite2D" parent="Asteroid/RigidBody"]
-texture = ExtResource("2_yqjtg")
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Ship"]
+polygon = PackedVector2Array(9, -8, -12, 0, 9, 8)
 
-[connection signal="input_event" from="Asteroid/RigidBody" to="Asteroid" method="_on_rigid_body_input_event"]
+[node name="Asteroid" parent="." instance=ExtResource("1_yqjtg")]
+position = Vector2(31, 0)

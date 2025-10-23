@@ -18,18 +18,21 @@ func smash(num_pieces: int):
 		else:
 			cur_angle = prev_angle + randfn(360.0/num_pieces, SMASH_ANGLE_DEVIATION_START+SMASH_ANGLE_DEVIATION_RATE*num_pieces)
 		
-		var sprite := generate_chunk_sprite(prev_angle, cur_angle)
+		var sprite := _generate_chunk_sprite(prev_angle, cur_angle)
 		asteroid_chunk.add_child(sprite)
 		
-		var collider := generate_chunk_collider(prev_angle, cur_angle)
+		var collider := _generate_chunk_collider(prev_angle, cur_angle)
 		asteroid_chunk.add_child(collider)
+		
+		asteroid_chunk.set_meta("smashed", true)
 		
 		add_child(asteroid_chunk)
 		
 		prev_angle = cur_angle
+	
 	$RigidBody.queue_free()
 
-func generate_chunk_sprite(prev_angle: float, cur_angle:float) -> Sprite2D:
+func _generate_chunk_sprite(prev_angle: float, cur_angle:float) -> Sprite2D:
 	prev_angle -= 180
 	cur_angle -= 180
 	var sprite := Sprite2D.new()
@@ -46,7 +49,7 @@ func generate_chunk_sprite(prev_angle: float, cur_angle:float) -> Sprite2D:
 	sprite.texture = ImageTexture.create_from_image(image)
 	return sprite
 
-func generate_chunk_collider(prev_angle: float, cur_angle:float) -> CollisionPolygon2D:
+func _generate_chunk_collider(prev_angle: float, cur_angle:float) -> CollisionPolygon2D:
 	var collider := CollisionPolygon2D.new()
 	var polygon: PackedVector2Array
 	var radius := sqrt(pow(original_image.get_width()/2.8, 2)+pow(original_image.get_height()/2.8, 2))
@@ -74,8 +77,3 @@ func test():
 	sprite.texture = ImageTexture.create_from_image(image)
 	sprite.global_position = Vector2(20, 20)
 	add_child(sprite)
-
-func _on_rigid_body_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
-	if event.is_action_pressed("left_click"):
-		smash(6)
-		#test()
