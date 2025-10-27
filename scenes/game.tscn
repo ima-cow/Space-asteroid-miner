@@ -10,6 +10,7 @@
 
 [node name="Ship" type="RigidBody2D" parent="."]
 position = Vector2(48, 52)
+lock_rotation = true
 script = ExtResource("2_lbhrr")
 
 [node name="Sprite2D" type="Sprite2D" parent="Ship"]

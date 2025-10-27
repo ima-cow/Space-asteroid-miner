@@ -77,3 +77,7 @@ func test():
 	sprite.texture = ImageTexture.create_from_image(image)
 	sprite.global_position = Vector2(20, 20)
 	add_child(sprite)
+
+
+func _on_rigid_body_body_shape_entered(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int) -> void:
+	smash(randi_range(4, 8))

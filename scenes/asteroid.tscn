@@ -20,4 +20,4 @@ texture = ExtResource("2_t4se3")
 scale = Vector2(2, 2)
 shape = SubResource("CircleShape2D_lnu2h")
 
-[connection signal="input_event" from="RigidBody" to="." method="_on_rigid_body_input_event"]
+[connection signal="body_shape_entered" from="RigidBody" to="." method="_on_rigid_body_body_shape_entered"]
