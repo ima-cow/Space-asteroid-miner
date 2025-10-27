@@ -1,7 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://stex3fnk2qly"]
+[gd_scene load_steps=6 format=3 uid="uid://stex3fnk2qly"]
 
 [ext_resource type="Script" uid="uid://dpx727y447wvh" path="res://scripts/asteroid.gd" id="1_6mo6b"]
+[ext_resource type="Texture2D" uid="uid://bhge7l4pu8mis" path="res://assets/gem.png" id="2_pnq5b"]
 [ext_resource type="Texture2D" uid="uid://24noxarump8g" path="res://assets/pixil-frame-0.png" id="2_t4se3"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_pwrvu"]
+radius = 3.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_lnu2h"]
 radius = 6.0
@@ -11,7 +15,21 @@ script = ExtResource("1_6mo6b")
 
 [node name="RigidBody" type="RigidBody2D" parent="."]
 input_pickable = true
+contact_monitor = true
+max_contacts_reported = 1
 metadata/smashed = false
+
+[node name="Gem" type="Node2D" parent="RigidBody"]
+unique_name_in_owner = true
+
+[node name="Sprite2D" type="Sprite2D" parent="RigidBody/Gem"]
+texture = ExtResource("2_pnq5b")
+
+[node name="Area2D" type="Area2D" parent="RigidBody/Gem"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody/Gem/Area2D"]
+scale = Vector2(0.8, 0.8)
+shape = SubResource("CircleShape2D_pwrvu")
 
 [node name="Sprite2D" type="Sprite2D" parent="RigidBody"]
 texture = ExtResource("2_t4se3")
@@ -19,5 +37,3 @@ texture = ExtResource("2_t4se3")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody"]
 scale = Vector2(2, 2)
 shape = SubResource("CircleShape2D_lnu2h")
-
-[connection signal="input_event" from="RigidBody" to="." method="_on_rigid_body_input_event"]
