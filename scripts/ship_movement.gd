@@ -16,10 +16,15 @@ func _physics_process(_delta: float) -> void:
 		$Beam/CollisionPolygon2D.disabled = false
 		ship_pos = global_position
 	elif Input.is_action_pressed("beam"):
-		print($Beam.get_overlapping_areas())
-		if $Beam.get_overlapping_areas().size() > 0:
-			print($Beam.get_overlapping_areas()[0].global_position)
-			$Beam.get_overlapping_areas()[0].global_position += ship_pos-global_position
+		#print($Beam.get_overlapping_areas())
+		#print(ship_pos-global_position)
+		
+		var amount_in_beam:int = $Beam.get_overlapping_areas().size()
+		if amount_in_beam == 1:
+			var object_in_beam: Node = $Beam.get_overlapping_areas()[0].get_parent()
+			if object_in_beam.name == "Gem":
+				object_in_beam.global_position += global_position-ship_pos
+		ship_pos = global_position
 	else:
 		$Beam.visible = false
 		$Beam/CollisionPolygon2D.disabled = true

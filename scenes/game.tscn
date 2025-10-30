@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://deidliikifwik"]
+[gd_scene load_steps=9 format=3 uid="uid://deidliikifwik"]
 
 [ext_resource type="PackedScene" uid="uid://stex3fnk2qly" path="res://scenes/asteroid.tscn" id="1_yqjtg"]
 [ext_resource type="Script" uid="uid://b6j5dpnb4ntek" path="res://scripts/ship_movement.gd" id="2_lbhrr"]
 [ext_resource type="Texture2D" uid="uid://dvmr3c6ujqyhv" path="res://assets/ship.png" id="2_lnu2h"]
 [ext_resource type="Texture2D" uid="uid://c4mitpvuk83wa" path="res://assets/beam.png" id="3_lbhrr"]
 [ext_resource type="Texture2D" uid="uid://dobtasoup88yb" path="res://assets/station.png" id="4_iywne"]
+[ext_resource type="Script" uid="uid://dgerbndc527js" path="res://scripts/station.gd" id="4_p57ef"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_iywne"]
 size = Vector2(26, 26)
@@ -23,6 +24,8 @@ position = Vector2(48, 54)
 lock_rotation = true
 contact_monitor = true
 max_contacts_reported = 1
+linear_damp_mode = 1
+linear_damp = 1.0
 script = ExtResource("2_lbhrr")
 
 [node name="Sprite2D" type="Sprite2D" parent="Ship"]
@@ -45,6 +48,7 @@ polygon = PackedVector2Array(-15, 2, -23, -3, -23, 7)
 disabled = true
 
 [node name="Station" type="StaticBody2D" parent="."]
+script = ExtResource("4_p57ef")
 
 [node name="Sprite2D" type="Sprite2D" parent="Station"]
 texture = ExtResource("4_iywne")
@@ -55,28 +59,28 @@ shape = SubResource("RectangleShape2D_iywne")
 
 [node name="Ports" type="Node" parent="Station"]
 
-[node name="Area2D" type="Area2D" parent="Station/Ports"]
+[node name="Port" type="Area2D" parent="Station/Ports"]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Station/Ports/Area2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Station/Ports/Port"]
 position = Vector2(-11.75, 0)
 shape = SubResource("RectangleShape2D_p57ef")
 
-[node name="Area2D2" type="Area2D" parent="Station/Ports"]
+[node name="Port2" type="Area2D" parent="Station/Ports"]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Station/Ports/Area2D2"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Station/Ports/Port2"]
 position = Vector2(11.75, 0)
 shape = SubResource("RectangleShape2D_p57ef")
 
-[node name="Area2D3" type="Area2D" parent="Station/Ports"]
+[node name="Port3" type="Area2D" parent="Station/Ports"]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Station/Ports/Area2D3"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Station/Ports/Port3"]
 position = Vector2(0, -11.75)
 rotation = 1.5707964
 shape = SubResource("RectangleShape2D_p57ef")
 
-[node name="Area2D4" type="Area2D" parent="Station/Ports"]
+[node name="Port4" type="Area2D" parent="Station/Ports"]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Station/Ports/Area2D4"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Station/Ports/Port4"]
 position = Vector2(0, 11.75)
 rotation = 1.5707964
 shape = SubResource("RectangleShape2D_p57ef")
@@ -98,4 +102,26 @@ position = Vector2(66, -67)
 [node name="Asteroid5" parent="Asteroids" instance=ExtResource("1_yqjtg")]
 position = Vector2(-80, 37)
 
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 126.0
+offset_top = -86.0
+offset_right = 156.0
+offset_bottom = -76.0
+
+[node name="CenterContainer" type="CenterContainer" parent="Control"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Score" type="Label" parent="Control/CenterContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
+
 [connection signal="property_list_changed" from="Ship/Beam/CollisionPolygon2D" to="Ship" method="_on_collision_polygon_2d_property_list_changed"]
+[connection signal="area_entered" from="Station/Ports/Port" to="Station" method="_on_port_area_entered"]
+[connection signal="area_entered" from="Station/Ports/Port2" to="Station" method="_on_port_area_entered"]
+[connection signal="area_entered" from="Station/Ports/Port3" to="Station" method="_on_port_area_entered"]
+[connection signal="area_entered" from="Station/Ports/Port4" to="Station" method="_on_port_area_entered"]
