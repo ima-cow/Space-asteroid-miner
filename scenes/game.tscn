@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=3 uid="uid://deidliikifwik"]
 
-[ext_resource type="PackedScene" uid="uid://stex3fnk2qly" path="res://scenes/asteroid.tscn" id="1_yqjtg"]
+[ext_resource type="Script" uid="uid://dx6xmrcwf5ohu" path="res://scenes/game.gd" id="1_u5sy4"]
 [ext_resource type="Script" uid="uid://b6j5dpnb4ntek" path="res://scripts/ship_movement.gd" id="2_lbhrr"]
 [ext_resource type="Texture2D" uid="uid://dvmr3c6ujqyhv" path="res://assets/ship.png" id="2_lnu2h"]
 [ext_resource type="Texture2D" uid="uid://c4mitpvuk83wa" path="res://assets/beam.png" id="3_lbhrr"]
@@ -14,6 +14,7 @@ size = Vector2(26, 26)
 size = Vector2(2.5, 18)
 
 [node name="Game" type="Node"]
+script = ExtResource("1_u5sy4")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 offset = Vector2(0.5, 0.5)
@@ -86,21 +87,6 @@ rotation = 1.5707964
 shape = SubResource("RectangleShape2D_p57ef")
 
 [node name="Asteroids" type="Node" parent="."]
-
-[node name="Asteroid" parent="Asteroids" instance=ExtResource("1_yqjtg")]
-position = Vector2(45, -8)
-
-[node name="Asteroid2" parent="Asteroids" instance=ExtResource("1_yqjtg")]
-position = Vector2(-79, -39)
-
-[node name="Asteroid3" parent="Asteroids" instance=ExtResource("1_yqjtg")]
-position = Vector2(-15, 27)
-
-[node name="Asteroid4" parent="Asteroids" instance=ExtResource("1_yqjtg")]
-position = Vector2(66, -67)
-
-[node name="Asteroid5" parent="Asteroids" instance=ExtResource("1_yqjtg")]
-position = Vector2(-80, 37)
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 3
