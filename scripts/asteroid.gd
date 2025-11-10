@@ -3,6 +3,7 @@ extends Node2D
 @onready var original_asteriod := $RigidBody
 @onready var original_sprite := $RigidBody/Sprite2D
 @onready var original_image:Image = original_sprite.texture.get_image()
+@onready var ship = $"../../Ship"
 
 const SMASH_ANGLE_DEVIATION_START := 24
 const SMASH_ANGLE_DEVIATION_RATE := -2
@@ -10,7 +11,7 @@ const SMASH_ANGLE_DEVIATION_RATE := -2
 var smashed := false
 
 func _physics_process(_delta: float) -> void:
-	if !smashed and original_asteriod.get_contact_count() > 0 and original_asteriod.get_colliding_bodies()[0] == %Ship:
+	if !smashed and original_asteriod.get_contact_count() > 0 and original_asteriod.get_colliding_bodies()[0] == ship:
 		%Gem.reparent(self)
 		smash(randi_range(5, 8))
 
@@ -31,10 +32,9 @@ func smash(num_pieces: int) -> void:
 		var collider := _generate_chunk_collider(prev_angle, cur_angle)
 		asteroid_chunk.add_child(collider)
 		asteroid_chunk.mass = _generate_chunk_mass(prev_angle, cur_angle)
-		#asteroid_chunk.global_position = original_asteriod.global_position
+		asteroid_chunk.global_position = original_asteriod.position
 	
 		add_child(asteroid_chunk)
-		
 		prev_angle = cur_angle
 	
 	smashed = true
