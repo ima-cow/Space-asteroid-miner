@@ -70,6 +70,27 @@ func _generate_chunk_collider(prev_angle: float, cur_angle:float) -> CollisionPo
 	
 	return collider
 
+<<<<<<< HEAD
+func test():
+	var sprite := Sprite2D.new()
+	var image := Image.create_empty(original_image.get_width(), original_image.get_height(), original_image.has_mipmaps(), original_image.get_format())
+	for x in original_image.get_width():
+		for y in original_image.get_height():
+			var angle_of_pixel := rad_to_deg(atan2(y-(original_image.get_width()/2.0), x-(original_image.get_height()/2.0)))
+			#print("x ",x," y ", y, " angle ",angle_of_pixel)
+			if angle_of_pixel >= -180 and angle_of_pixel < 0 and original_sprite.is_pixel_opaque(Vector2(x-(original_image.get_width()/2.0), y-(original_image.get_height()/2.0))):
+				image.set_pixel(x, y, Color.RED)
+			else:
+				image.set_pixel(x, y, original_image.get_pixel(x, y))
+			print("x ",x," y ", y, " ", 1-(sqrt(pow(x, 2)+pow(y, 2)))/(sqrt(pow(original_image.get_width(), 2)+pow(original_image.get_height(), 2))))
+	sprite.texture = ImageTexture.create_from_image(image)
+	sprite.global_position = Vector2(20, 20)
+	add_child(sprite)
+
+
+func _on_rigid_body_body_shape_entered(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int) -> void:
+	smash(randi_range(4, 8))
+=======
 func _generate_chunk_mass(prev_angle: float, cur_angle:float) -> float:
 	var radius := -sqrt(pow(original_image.get_width()/2.8, 2)+pow(original_image.get_height()/2.8, 2))
 	var area := PI*pow(radius, 2)
@@ -93,3 +114,4 @@ func _generate_chunk_mass(prev_angle: float, cur_angle:float) -> float:
 	#sprite.texture = ImageTexture.create_from_image(image)
 	#sprite.global_position = Vector2(20, 20)
 	#add_child(sprite)
+>>>>>>> 5df8170ccdeb5528f675798e238fd69a6684786a
