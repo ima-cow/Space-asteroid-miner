@@ -32,10 +32,9 @@ func smash(num_pieces: int) -> void:
 		var collider := _generate_chunk_collider(prev_angle, cur_angle)
 		asteroid_chunk.add_child(collider)
 		asteroid_chunk.mass = _generate_chunk_mass(prev_angle, cur_angle)
-		#asteroid_chunk.global_position = original_asteriod.global_position
+		asteroid_chunk.global_position = original_asteriod.position
 	
 		add_child(asteroid_chunk)
-		
 		prev_angle = cur_angle
 	
 	smashed = true

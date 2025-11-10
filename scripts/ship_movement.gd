@@ -16,6 +16,7 @@ func _physics_process(_delta: float) -> void:
 		$Beam/CollisionPolygon2D.disabled = false
 		ship_pos = global_position
 	elif Input.is_action_pressed("beam"):
+		#print($Beam.visible, $Beam/CollisionPolygon2D.disabled)
 		var amount_in_beam:int = $Beam.get_overlapping_areas().size()
 		if amount_in_beam > 0:
 			var first_object_in_beam: Node = $Beam.get_overlapping_areas()[0].get_parent()
