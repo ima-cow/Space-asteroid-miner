@@ -2,6 +2,9 @@ extends RigidBody2D
 
 const SPEED = 100.0
 
+#@export var _rotation_speed : float = TAU * 2
+#var _theta : float
+
 var ship_pos := global_position
 
 func _physics_process(_delta: float) -> void:
@@ -11,6 +14,11 @@ func _physics_process(_delta: float) -> void:
 	if horizontal_direction or vertical_direction:
 		apply_central_force(Vector2(horizontal_direction*SPEED, vertical_direction*SPEED))
 	
+	if horizontal_direction or vertical_direction:
+		#_theta * wrapf(atan2(vertical_direction, horizontal_direction) - rotation, -PI, PI)
+		#rotation += clamp(_rotation_speed * _delta, 0, abs(_theta) * sign(_theta))
+		look_at(Vector2(horizontal_direction, vertical_direction))
+		
 	if Input.is_action_just_pressed("beam"):
 		$Beam.visible = true
 		$Beam/CollisionPolygon2D.disabled = false
