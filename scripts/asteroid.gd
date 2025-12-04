@@ -1,19 +1,33 @@
 extends Node2D
 
-@onready var original_asteriod := $RigidBody
-@onready var original_sprite := $RigidBody/Sprite2D
-@onready var original_image:Image = original_sprite.texture.get_image()
-@onready var ship = $"../../Ship"
+@onready var original_asteriod:RigidBody2D = $RigidBody
+@onready var original_sprite:Sprite2D = $RigidBody/Sprite2D
+@onready var original_image:Image 
+@onready var ship:RigidBody2D = $"../../Ship"
+
+@export var textures:Array[Texture2D]
 
 const SMASH_ANGLE_DEVIATION_START := 24
 const SMASH_ANGLE_DEVIATION_RATE := -2
 
-var smashed := false
+var edge_points:Array[Vector2i]
+var edge_point_angles:Array[float]
 
+func _ready() -> void:
+	var rand_texture = textures[randi_range(0, textures.size()-1)]
+	original_sprite.texture = rand_texture
+	original_image = rand_texture.get_image()
+	rotation_degrees = randi_range(0, 360)
+
+var prev_velocity := Vector2.ZERO
 func _physics_process(_delta: float) -> void:
-	if !smashed and original_asteriod.get_contact_count() > 0 and original_asteriod.get_colliding_bodies()[0] == ship:
+	if original_asteriod == null:
+		return
+	
+	if abs(original_asteriod.linear_velocity - prev_velocity).x > 30 or abs(original_asteriod.linear_velocity - prev_velocity).y > 30:
 		%Gem.reparent(self)
 		smash(randi_range(5, 8))
+	prev_velocity = original_asteriod.linear_velocity
 
 func smash(num_pieces: int) -> void:
 	var prev_angle := 0.0
@@ -37,7 +51,6 @@ func smash(num_pieces: int) -> void:
 		add_child(asteroid_chunk)
 		prev_angle = cur_angle
 	
-	smashed = true
 	original_asteriod.queue_free()
 
 func _generate_chunk_sprite(prev_angle: float, cur_angle:float) -> Sprite2D:
@@ -70,25 +83,6 @@ func _generate_chunk_collider(prev_angle: float, cur_angle:float) -> CollisionPo
 	
 	return collider
 
-func test():
-	var sprite := Sprite2D.new()
-	var image := Image.create_empty(original_image.get_width(), original_image.get_height(), original_image.has_mipmaps(), original_image.get_format())
-	for x in original_image.get_width():
-		for y in original_image.get_height():
-			var angle_of_pixel := rad_to_deg(atan2(y-(original_image.get_width()/2.0), x-(original_image.get_height()/2.0)))
-			#print("x ",x," y ", y, " angle ",angle_of_pixel)
-			if angle_of_pixel >= -180 and angle_of_pixel < 0 and original_sprite.is_pixel_opaque(Vector2(x-(original_image.get_width()/2.0), y-(original_image.get_height()/2.0))):
-				image.set_pixel(x, y, Color.RED)
-			else:
-				image.set_pixel(x, y, original_image.get_pixel(x, y))
-			print("x ",x," y ", y, " ", 1-(sqrt(pow(x, 2)+pow(y, 2)))/(sqrt(pow(original_image.get_width(), 2)+pow(original_image.get_height(), 2))))
-	sprite.texture = ImageTexture.create_from_image(image)
-	sprite.global_position = Vector2(20, 20)
-	add_child(sprite)
-
-
-func _on_rigid_body_body_shape_entered(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int) -> void:
-	smash(randi_range(4, 8))
 
 func _generate_chunk_mass(prev_angle: float, cur_angle:float) -> float:
 	var radius := -sqrt(pow(original_image.get_width()/2.8, 2)+pow(original_image.get_height()/2.8, 2))
@@ -98,18 +92,37 @@ func _generate_chunk_mass(prev_angle: float, cur_angle:float) -> float:
 	
 	return area_under_arc/area
 
-#func test():
-	#var sprite := Sprite2D.new()
-	#var image := Image.create_empty(original_image.get_width(), original_image.get_height(), original_image.has_mipmaps(), original_image.get_format())
+#for vec in edge_points:
+	#var cords_in_original := Vector2(vec.x-(original_image.get_width()/2.0), vec.y-(original_image.get_width()/2.0))
+	#var angle_of_pixel := rad_to_deg(atan2(cords_in_original.y, cords_in_original.x))
+	#edge_point_angles.append(angle_of_pixel+180)
+
+#func _on_rigid_body_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
+	#if event is InputEventMouseButton:
+
+#func _get_edge_points() -> void:
 	#for x in original_image.get_width():
 		#for y in original_image.get_height():
-			#var angle_of_pixel := rad_to_deg(atan2(y-(original_image.get_width()/2.0), x-(original_image.get_height()/2.0)))
-			##print("x ",x," y ", y, " angle ",angle_of_pixel)
-			#if angle_of_pixel >= -180 and angle_of_pixel < 0 and original_sprite.is_pixel_opaque(Vector2(x-(original_image.get_width()/2.0), y-(original_image.get_height()/2.0))):
-				#image.set_pixel(x, y, Color.RED)
-			#else:
-				#image.set_pixel(x, y, original_image.get_pixel(x, y))
-			#print("x ",x," y ", y, " ", 1-(sqrt(pow(x, 2)+pow(y, 2)))/(sqrt(pow(original_image.get_width(), 2)+pow(original_image.get_height(), 2))))
-	#sprite.texture = ImageTexture.create_from_image(image)
-	#sprite.global_position = Vector2(20, 20)
-	#add_child(sprite)
+			#if original_image.get_pixel(x, y).a != 0 and (x == original_image.get_width()-1 or y == original_image.get_height()-1 or x == 0 or y == 0):
+				#edge_points.append(Vector2i(x, y))
+			#elif original_image.get_pixel(x, y).a != 0 and original_image.get_pixel(x+1, y).a == 0:
+				#edge_points.append(Vector2i(x, y))
+			#elif original_image.get_pixel(x, y).a != 0 and original_image.get_pixel(x-1, y).a == 0:
+				#edge_points.append(Vector2i(x, y))
+			#elif original_image.get_pixel(x, y).a != 0 and original_image.get_pixel(x, y+1).a == 0:
+				#edge_points.append(Vector2i(x, y))
+			#elif original_image.get_pixel(x, y).a != 0 and original_image.get_pixel(x, y-1).a == 0:
+				#edge_points.append(Vector2i(x, y))
+	#
+		#_get_edge_points()
+
+#func _get_closest_angle(target:float, angles:Array[float]) -> float:
+	#var closest_diff = INF
+	#var res: float
+	#
+	#for angle in angles:
+		#var diff:float = abs(angle-target)
+		#if diff < closest_diff:
+			#res = angle
+	#
+	#return res
