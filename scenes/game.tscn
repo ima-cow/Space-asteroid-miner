@@ -22,8 +22,7 @@ offset = Vector2(0.5, 0.5)
 
 [node name="Ship" type="RigidBody2D" parent="."]
 unique_name_in_owner = true
-position = Vector2(48, 54)
-lock_rotation = true
+position = Vector2(51, 55)
 contact_monitor = true
 max_contacts_reported = 1
 linear_damp_mode = 1
@@ -32,13 +31,14 @@ script = ExtResource("2_lbhrr")
 
 [node name="Sprite2D" type="Sprite2D" parent="Ship"]
 z_index = 1
-position = Vector2(4.000002, -13)
+position = Vector2(-1, 9.536743e-07)
 rotation = 4.712389
-scale = Vector2(2.061167, 2.061167)
+scale = Vector2(1.2697885, 1.2697885)
 texture = ExtResource("3_p57ef")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Ship"]
-position = Vector2(4, -13)
+position = Vector2(-2.0000012, -9.536743e-07)
+scale = Vector2(0.65340894, 0.653409)
 polygon = PackedVector2Array(12, -8, 8, -11, 3, -11, -14, -6, -5, 0, -13, 6, 4, 11, 7, 11, 12, 7, 14, 0)
 
 [node name="Beam" type="Area2D" parent="Ship"]
@@ -114,6 +114,7 @@ layout_mode = 2
 text = "0 /10"
 
 [node name="StaryBackground" type="Sprite2D" parent="."]
+visible = false
 z_index = -1
 position = Vector2(1, 1)
 texture = ExtResource("7_u5sy4")
