@@ -2,9 +2,9 @@ extends RigidBody2D
 
 const SPEED = 100.0
 
-var ship_pos := global_position
+var object_in_beam:Node
 
-@export var rotation_speed_degrees:float = 10.0
+@export var rotation_speed_degrees:float = 240.0
 func _physics_process(_delta: float) -> void:
 	var horizontal_direction := Input.get_axis("forward", "back")
 	var vertical_direction := Input.get_axis("left", "right")
@@ -20,14 +20,14 @@ func _physics_process(_delta: float) -> void:
 	if Input.is_action_just_pressed("beam"):
 		$Beam.visible = true
 		$Beam/CollisionPolygon2D.disabled = false
-		ship_pos = global_position
 	elif Input.is_action_pressed("beam"):
 		var amount_in_beam:int = $Beam.get_overlapping_areas().size()
 		if amount_in_beam > 0:
-			var first_object_in_beam: Node = $Beam.get_overlapping_areas()[0].get_parent()
-			if first_object_in_beam.name == "Gem":
-				first_object_in_beam.global_position += global_position-ship_pos
-		ship_pos = global_position
+			object_in_beam = $Beam.get_overlapping_areas()[0].get_parent()
+			if object_in_beam.name == "Gem":
+				object_in_beam.reparent(self)
 	else:
+		if object_in_beam != null and object_in_beam.name == "Gem":
+				object_in_beam.reparent($"../Asteroids")
 		$Beam.visible = false
 		$Beam/CollisionPolygon2D.disabled = true
