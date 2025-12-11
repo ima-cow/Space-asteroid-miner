@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://deidliikifwik"]
+[gd_scene load_steps=11 format=3 uid="uid://deidliikifwik"]
 
 [ext_resource type="Script" uid="uid://dx6xmrcwf5ohu" path="res://scripts/game.gd" id="1_u5sy4"]
 [ext_resource type="Script" uid="uid://b6j5dpnb4ntek" path="res://scripts/ship_movement.gd" id="2_lbhrr"]
@@ -14,6 +14,9 @@ size = Vector2(26, 26)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_p57ef"]
 size = Vector2(2, 8)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u5sy4"]
+bg_color = Color(0.15247649, 0.15247649, 0.1524764, 1)
+
 [node name="Game" type="Node"]
 script = ExtResource("1_u5sy4")
 
@@ -22,7 +25,7 @@ offset = Vector2(0.5, 0.5)
 
 [node name="Ship" type="RigidBody2D" parent="."]
 unique_name_in_owner = true
-position = Vector2(51, 55)
+position = Vector2(0, 25)
 contact_monitor = true
 max_contacts_reported = 1
 linear_damp_mode = 1
@@ -95,23 +98,100 @@ shape = SubResource("RectangleShape2D_p57ef")
 
 [node name="Asteroids" type="Node" parent="."]
 
-[node name="Control" type="Control" parent="."]
+[node name="LostShip" type="Control" parent="."]
+unique_name_in_owner = true
+visible = false
 layout_mode = 3
 anchors_preset = 0
-offset_left = 113.0
-offset_top = -97.0
-offset_right = 143.0
-offset_bottom = -87.0
+offset_left = -134.0
+offset_top = -66.0
+offset_right = -134.0
+offset_bottom = -66.0
 
-[node name="CenterContainer" type="CenterContainer" parent="Control"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="CenterContainer" type="CenterContainer" parent="LostShip"]
+layout_mode = 1
+offset_right = 29.0
+offset_bottom = 23.0
 
-[node name="Score" type="Label" parent="Control/CenterContainer"]
+[node name="Message" type="Label" parent="LostShip/CenterContainer"]
+layout_mode = 2
+text = "Return to area near station now  
+or risk getting your ship destroyed
+"
+horizontal_alignment = 1
+
+[node name="Lives" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = -152.0
+offset_top = -88.0
+offset_right = -152.0
+offset_bottom = -88.0
+
+[node name="CenterContainer" type="CenterContainer" parent="Lives"]
+layout_mode = 1
+offset_right = 29.0
+offset_bottom = 23.0
+
+[node name="Lives" type="Label" parent="Lives/CenterContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "0 /10"
+text = "Lives: 2
+"
+
+[node name="Score" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 72.0
+offset_top = -88.0
+offset_right = 72.0
+offset_bottom = -88.0
+
+[node name="CenterContainer" type="CenterContainer" parent="Score"]
+layout_mode = 1
+offset_right = 29.0
+offset_bottom = 23.0
+
+[node name="Score" type="Label" parent="Score/CenterContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Score: 0 /5"
+
+[node name="Control" type="Control" parent="."]
+z_index = 1
+layout_mode = 3
+anchors_preset = 0
+offset_left = -161.0
+offset_top = -91.0
+offset_right = 162.0
+offset_bottom = 92.0
+
+[node name="Panel" type="Panel" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_u5sy4")
+
+[node name="CenterContainer" type="CenterContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="Control/CenterContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 9
+text = "Your goal is to smash trough asteroids by ramming them at speed. 
+Move forward with 'w', back with 's', and left and right with 'a' and 'd'. 
+Move gems into the station with your beam by pressing 'space'.
+
+Click to continue"
+horizontal_alignment = 1
 
 [node name="StaryBackground" type="Sprite2D" parent="."]
 z_index = -1

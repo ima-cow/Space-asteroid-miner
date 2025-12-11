@@ -6,4 +6,6 @@ func _on_port_area_entered(area: Area2D) -> void:
 	if area.get_parent().name == "Gem":
 		area.get_parent().queue_free()
 		score += 1
-		get_node("%Score").text = str(score)+" / 10"
+		get_node("%Score").text = "Score: "+str(score)+" / 10"
+		if score >= 5:
+			get_tree().change_scene_to_file("res://scenes/win_screen.tscn")
