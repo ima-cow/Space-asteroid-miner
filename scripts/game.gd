@@ -15,7 +15,7 @@ func _ready() -> void:
 			asteroids.add_child(asteroid_to_generate)
 
 var time_out_of_play_area := 0
-const MAX_TIME_OUT_OF_PLAY_AREA := 200
+const MAX_TIME_OUT_OF_PLAY_AREA := 400
 func _process(_delta: float) -> void:
 	if $Control.visible == true and Input.is_action_just_pressed("left_click"):
 		$Control.visible = false
