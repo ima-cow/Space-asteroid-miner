@@ -8,7 +8,7 @@ const ASTEROID_SPAWN_PREVENTION_RADIUS := 22
 const STATION_SPAWN_PRENVTION_AREA := Vector2i(35, 35)
 const AMOUNT_TO_GENERATE := 30
 const TIME_ALLOWED := 60
-const MAX_TIME_OUT_OF_PLAY_AREA := 150
+const MAX_TIME_OUT_OF_PLAY_AREA := 1
 
 var ship_lives := 2
 var score := 0
