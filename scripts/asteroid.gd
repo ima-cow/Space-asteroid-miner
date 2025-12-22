@@ -2,21 +2,22 @@ extends Node2D
 
 @onready var original_asteriod:RigidBody2D = $RigidBody
 @onready var original_sprite:Sprite2D = $RigidBody/Sprite2D
-@onready var original_image:Image 
+@onready var original_image:Image = original_sprite.texture.get_image()
 @onready var ship:RigidBody2D = $"../../Ship"
 
-@export var textures:Array[Texture2D]
+#@export var textures:Array[Texture2D]
 
 const SMASH_ANGLE_DEVIATION_START := 24
 const SMASH_ANGLE_DEVIATION_RATE := -2
+const BREAK_IMPACT_AMOUNT := 25
 
-var edge_points:Array[Vector2i]
-var edge_point_angles:Array[float]
+#var edge_points:Array[Vector2i]
+#var edge_point_angles:Array[float]
 
 func _ready() -> void:
-	var rand_texture = textures[randi_range(0, textures.size()-1)]
-	original_sprite.texture = rand_texture
-	original_image = rand_texture.get_image()
+	#if randf() > 0.5:
+		#scale = Vector2(2, 2)
+		#print("wow")
 	rotation_degrees = randi_range(0, 360)
 
 var prev_velocity := Vector2.ZERO
@@ -24,9 +25,10 @@ func _physics_process(_delta: float) -> void:
 	if original_asteriod == null:
 		return
 	
-	if abs(original_asteriod.linear_velocity - prev_velocity).x > 30 or abs(original_asteriod.linear_velocity - prev_velocity).y > 30:
+	if abs(original_asteriod.linear_velocity - prev_velocity).x > BREAK_IMPACT_AMOUNT or abs(original_asteriod.linear_velocity - prev_velocity).y > BREAK_IMPACT_AMOUNT:
 		%Gem.reparent(self)
 		smash(randi_range(5, 8))
+		self.set_meta("broken", true)
 	prev_velocity = original_asteriod.linear_velocity
 
 func smash(num_pieces: int) -> void:
@@ -51,6 +53,8 @@ func smash(num_pieces: int) -> void:
 		add_child(asteroid_chunk)
 		prev_angle = cur_angle
 	
+	%Gem/Area2D.monitoring = true
+	%Gem/Area2D.monitorable = true
 	original_asteriod.queue_free()
 
 func _generate_chunk_sprite(prev_angle: float, cur_angle:float) -> Sprite2D:
@@ -83,9 +87,8 @@ func _generate_chunk_collider(prev_angle: float, cur_angle:float) -> CollisionPo
 	
 	return collider
 
-
 func _generate_chunk_mass(prev_angle: float, cur_angle:float) -> float:
-	var radius := -sqrt(pow(original_image.get_width()/2.8, 2)+pow(original_image.get_height()/2.8, 2))
+	var radius:float = -sqrt(pow(original_image.get_width()/2.8, 2)+pow(original_image.get_height()/2.8, 2))
 	var area := PI*pow(radius, 2)
 	var arc := cur_angle-prev_angle
 	var area_under_arc := (arc/360)*area

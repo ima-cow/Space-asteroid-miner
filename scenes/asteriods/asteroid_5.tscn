@@ -1,0 +1,50 @@
+[gd_scene load_steps=11 format=3 uid="uid://dxnyx2mtiwh8v"]
+
+[ext_resource type="Script" uid="uid://dpx727y447wvh" path="res://scripts/asteroid.gd" id="1_oq3mm"]
+[ext_resource type="Texture2D" uid="uid://do1hy8a0gxlco" path="res://assets/asteroid_1.png" id="2_1pwo3"]
+[ext_resource type="Texture2D" uid="uid://bmehst4drtdmg" path="res://assets/asteroid_2.png" id="3_notff"]
+[ext_resource type="Texture2D" uid="uid://ceq2a8ua7ohf7" path="res://assets/asteroid_3.png" id="4_2wy3o"]
+[ext_resource type="Texture2D" uid="uid://d1qsm5bqky4bh" path="res://assets/asteroid_4.png" id="5_8tvov"]
+[ext_resource type="Texture2D" uid="uid://dcmlx05ipuque" path="res://assets/asteroid_5.png" id="6_walkm"]
+[ext_resource type="Texture2D" uid="uid://c0tyb3cs5lp05" path="res://assets/asteroid_6.png" id="7_c62ig"]
+[ext_resource type="Texture2D" uid="uid://bhge7l4pu8mis" path="res://assets/gem.png" id="8_lp4uf"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_pwrvu"]
+radius = 3.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_lnu2h"]
+radius = 6.0
+
+[node name="Asteroid" type="Node2D"]
+script = ExtResource("1_oq3mm")
+textures = Array[Texture2D]([ExtResource("2_1pwo3"), ExtResource("3_notff"), ExtResource("4_2wy3o"), ExtResource("5_8tvov"), ExtResource("6_walkm"), ExtResource("7_c62ig")])
+metadata/broken = false
+
+[node name="RigidBody" type="RigidBody2D" parent="."]
+input_pickable = true
+contact_monitor = true
+max_contacts_reported = 1
+metadata/smashed = false
+
+[node name="Gem" type="Node2D" parent="RigidBody"]
+unique_name_in_owner = true
+
+[node name="Sprite2D" type="Sprite2D" parent="RigidBody/Gem"]
+texture = ExtResource("8_lp4uf")
+
+[node name="Area2D" type="Area2D" parent="RigidBody/Gem"]
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody/Gem/Area2D"]
+scale = Vector2(0.8, 0.8)
+shape = SubResource("CircleShape2D_pwrvu")
+
+[node name="Sprite2D" type="Sprite2D" parent="RigidBody"]
+texture = ExtResource("6_walkm")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody"]
+scale = Vector2(2, 2)
+shape = SubResource("CircleShape2D_lnu2h")
+
+[connection signal="input_event" from="RigidBody" to="." method="_on_rigid_body_input_event"]
