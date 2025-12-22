@@ -2,12 +2,12 @@ extends Node
 
 var asteroid := [preload("res://scenes/asteriods/asteroid_1.tscn"), preload("res://scenes/asteriods/asteroid_2.tscn"), preload("res://scenes/asteriods/asteroid_3.tscn"), preload("res://scenes/asteriods/asteroid_4.tscn"), preload("res://scenes/asteriods/asteroid_4.tscn"), preload("res://scenes/asteriods/asteroid_5.tscn"), preload("res://scenes/asteriods/asteroid_6.tscn")]
 @onready var asteroids := $Asteroids
-@onready var time_left:SceneTreeTimer
+@onready var time_left:Timer
 
 const ASTEROID_SPAWN_PREVENTION_RADIUS := 22
 const STATION_SPAWN_PRENVTION_AREA := Vector2i(35, 35)
 const AMOUNT_TO_GENERATE := 30
-const TIME_ALLOWED := 60
+const TIME_ALLOWED := 61
 const MAX_TIME_OUT_OF_PLAY_AREA := 150
 
 var ship_lives := 2
@@ -108,9 +108,7 @@ func _on_reset_button_pressed() -> void:
 func _on_start_button_pressed() -> void:
 	$Control.visible = false
 	
-	
-	time_left = get_tree().create_timer(TIME_ALLOWED)
-	await time_left.timeout
+	await get_tree().create_timer(TIME_ALLOWED).timeout
 	
 	$WinScreen.visible = true
 	$WinScreen/CenterContainer/VBoxContainer/Label.text = "You survived! \n Score: "+str(score)
