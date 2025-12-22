@@ -4,15 +4,18 @@
 [ext_resource type="Script" uid="uid://b6j5dpnb4ntek" path="res://scripts/ship_movement.gd" id="2_lbhrr"]
 [ext_resource type="Texture2D" uid="uid://c4mitpvuk83wa" path="res://assets/beam.png" id="3_lbhrr"]
 [ext_resource type="Texture2D" uid="uid://k36l3kyo7fxf" path="res://assets/Arcade_Game_Actual_Ship.png" id="3_p57ef"]
-[ext_resource type="Script" uid="uid://dgerbndc527js" path="res://scripts/station.gd" id="4_p57ef"]
 [ext_resource type="Texture2D" uid="uid://b5qr3cndio5jy" path="res://assets/Arcade_Game_Ship.png" id="6_p57ef"]
 [ext_resource type="Texture2D" uid="uid://bus7rv2xdssmt" path="res://assets/stary_background.png" id="7_u5sy4"]
+
+[sub_resource type="GDScript" id="GDScript_p57ef"]
+script/source = "extends StaticBody2D
+"
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_iywne"]
 size = Vector2(26, 26)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_p57ef"]
-size = Vector2(2, 8)
+[sub_resource type="CircleShape2D" id="CircleShape2D_p57ef"]
+radius = 12.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u5sy4"]
 bg_color = Color(0.15247649, 0.15247649, 0.1524764, 1)
@@ -30,6 +33,7 @@ contact_monitor = true
 max_contacts_reported = 1
 linear_damp_mode = 1
 linear_damp = 1.0
+angular_damp = 100.0
 script = ExtResource("2_lbhrr")
 
 [node name="Sprite2D" type="Sprite2D" parent="Ship"]
@@ -42,22 +46,22 @@ texture = ExtResource("3_p57ef")
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Ship"]
 position = Vector2(-2.0000012, -9.536743e-07)
 scale = Vector2(0.65340894, 0.653409)
-polygon = PackedVector2Array(12, -8, 8, -11, 3, -11, -14, -6, -5, 0, -13, 6, 4, 11, 7, 11, 12, 7, 14, 0)
+polygon = PackedVector2Array(12, -8, 8, -11, 3, -11, -12.243478, -6.1217384, -3.060868, -1.5304337, -3.060868, 1.5304337, -12.243478, 6.1217384, 4, 11, 7, 11, 12, 7, 14, 0)
 
 [node name="Beam" type="Area2D" parent="Ship"]
-visible = false
+position = Vector2(3, 0)
 
 [node name="Sprite2D" type="Sprite2D" parent="Ship/Beam"]
 position = Vector2(-16, 0)
 texture = ExtResource("3_lbhrr")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Ship/Beam"]
-position = Vector2(3, -2)
-polygon = PackedVector2Array(-15, 2, -23, -3, -23, 7)
+position = Vector2(3.5, -2)
+polygon = PackedVector2Array(-15, 2, -23, -2, -23, 6)
 disabled = true
 
 [node name="Station" type="StaticBody2D" parent="."]
-script = ExtResource("4_p57ef")
+script = SubResource("GDScript_p57ef")
 
 [node name="Sprite2D" type="Sprite2D" parent="Station"]
 position = Vector2(0, 1)
@@ -73,28 +77,8 @@ shape = SubResource("RectangleShape2D_iywne")
 [node name="Port" type="Area2D" parent="Station/Ports"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Station/Ports/Port"]
-position = Vector2(-11.75, 0)
-shape = SubResource("RectangleShape2D_p57ef")
-
-[node name="Port2" type="Area2D" parent="Station/Ports"]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Station/Ports/Port2"]
-position = Vector2(11.75, 0)
-shape = SubResource("RectangleShape2D_p57ef")
-
-[node name="Port3" type="Area2D" parent="Station/Ports"]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Station/Ports/Port3"]
-position = Vector2(0, -11.75)
-rotation = 1.5707964
-shape = SubResource("RectangleShape2D_p57ef")
-
-[node name="Port4" type="Area2D" parent="Station/Ports"]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Station/Ports/Port4"]
-position = Vector2(0, 13)
-rotation = 1.5707964
-shape = SubResource("RectangleShape2D_p57ef")
+position = Vector2(0, 1)
+shape = SubResource("CircleShape2D_p57ef")
 
 [node name="Asteroids" type="Node" parent="."]
 
@@ -120,6 +104,23 @@ or risk getting your ship destroyed
 "
 horizontal_alignment = 1
 
+[node name="TimeLeft" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = -14.0
+offset_top = -88.0
+offset_right = -14.0
+offset_bottom = -88.0
+
+[node name="CenterContainer" type="CenterContainer" parent="TimeLeft"]
+layout_mode = 1
+offset_right = 29.0
+offset_bottom = 23.0
+
+[node name="Time" type="Label" parent="TimeLeft/CenterContainer"]
+layout_mode = 2
+text = "120"
+
 [node name="Lives" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
@@ -136,15 +137,14 @@ offset_bottom = 23.0
 [node name="Lives" type="Label" parent="Lives/CenterContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Lives: 2
-"
+text = "Lives: 2"
 
 [node name="Score" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
-offset_left = 72.0
+offset_left = 94.0
 offset_top = -88.0
-offset_right = 72.0
+offset_right = 94.0
 offset_bottom = -88.0
 
 [node name="CenterContainer" type="CenterContainer" parent="Score"]
@@ -155,7 +155,104 @@ offset_bottom = 23.0
 [node name="Score" type="Label" parent="Score/CenterContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Score: 0 /5"
+text = "Score: 0"
+
+[node name="WinScreen" type="Control" parent="."]
+visible = false
+z_index = 1
+layout_mode = 3
+anchors_preset = 0
+offset_left = -322.0
+offset_top = -182.0
+offset_right = 1.0
+offset_bottom = 1.0
+
+[node name="Panel" type="Panel" parent="WinScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 161.0
+offset_top = 92.0
+offset_right = 161.0
+offset_bottom = 92.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_u5sy4")
+
+[node name="CenterContainer" type="CenterContainer" parent="WinScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 161.0
+offset_top = 92.0
+offset_right = 161.0
+offset_bottom = 92.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="WinScreen/CenterContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="WinScreen/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "You win!
+Score: 5"
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="WinScreen/CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Play again?"
+
+[node name="LoseScreen" type="Control" parent="."]
+visible = false
+z_index = 1
+layout_mode = 3
+anchors_preset = 0
+offset_left = -322.0
+offset_top = -182.0
+offset_right = 1.0
+offset_bottom = 1.0
+
+[node name="Panel" type="Panel" parent="LoseScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 161.0
+offset_top = 92.0
+offset_right = 161.0
+offset_bottom = 92.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_u5sy4")
+
+[node name="CenterContainer" type="CenterContainer" parent="LoseScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 161.0
+offset_top = 92.0
+offset_right = 161.0
+offset_bottom = 92.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LoseScreen/CenterContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="LoseScreen/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "You died!"
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="LoseScreen/CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Play again?"
 
 [node name="Control" type="Control" parent="."]
 z_index = 1
@@ -183,7 +280,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Label" type="Label" parent="Control/CenterContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/CenterContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 9
 text = "Your goal is to smash trough asteroids by ramming them at speed 
@@ -191,8 +288,20 @@ Move forward with 'w', back with 's', and left and right with 'a' and 'd'
 Move gems into the station with your beam by pressing 'space'
 Do not loose the valuable asteroids, or yourself far away from the station
 
-Click to continue"
+[node name="Label" type="Label" parent="Control/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 9
+text = "Smash asteroids by ramming them with speed to get gems
+Move gems into the station with your beam by pressing 'enter'
+Collect as many gems as possible in 1 minute
+Move forward your ship forward with 'w', back with 's'
+Rotate your ship left with 'a' and right with 'd' 
+"
 horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="Control/CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Start"
 
 [node name="StaryBackground" type="Sprite2D" parent="."]
 z_index = -1
@@ -200,7 +309,7 @@ position = Vector2(1, 1)
 texture = ExtResource("7_u5sy4")
 
 [connection signal="property_list_changed" from="Ship/Beam/CollisionPolygon2D" to="Ship" method="_on_collision_polygon_2d_property_list_changed"]
-[connection signal="area_entered" from="Station/Ports/Port" to="Station" method="_on_port_area_entered"]
-[connection signal="area_entered" from="Station/Ports/Port2" to="Station" method="_on_port_area_entered"]
-[connection signal="area_entered" from="Station/Ports/Port3" to="Station" method="_on_port_area_entered"]
-[connection signal="area_entered" from="Station/Ports/Port4" to="Station" method="_on_port_area_entered"]
+[connection signal="area_entered" from="Station/Ports/Port" to="." method="_on_port_area_entered"]
+[connection signal="pressed" from="WinScreen/CenterContainer/VBoxContainer/Button" to="." method="_on_reset_button_pressed"]
+[connection signal="pressed" from="LoseScreen/CenterContainer/VBoxContainer/Button" to="." method="_on_reset_button_pressed"]
+[connection signal="pressed" from="Control/CenterContainer/VBoxContainer/Button" to="." method="_on_start_button_pressed"]

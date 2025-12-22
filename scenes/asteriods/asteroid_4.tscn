@@ -1,0 +1,52 @@
+[gd_scene load_steps=11 format=3 uid="uid://dmjjta7sv1ehq"]
+
+[ext_resource type="Script" uid="uid://dpx727y447wvh" path="res://scripts/asteroid.gd" id="1_8k7k6"]
+[ext_resource type="Texture2D" uid="uid://do1hy8a0gxlco" path="res://assets/asteroid_1.png" id="2_nbccl"]
+[ext_resource type="Texture2D" uid="uid://bmehst4drtdmg" path="res://assets/asteroid_2.png" id="3_x26r3"]
+[ext_resource type="Texture2D" uid="uid://ceq2a8ua7ohf7" path="res://assets/asteroid_3.png" id="4_csaid"]
+[ext_resource type="Texture2D" uid="uid://d1qsm5bqky4bh" path="res://assets/asteroid_4.png" id="5_kcpjf"]
+[ext_resource type="Texture2D" uid="uid://dcmlx05ipuque" path="res://assets/asteroid_5.png" id="6_av5yq"]
+[ext_resource type="Texture2D" uid="uid://c0tyb3cs5lp05" path="res://assets/asteroid_6.png" id="7_m4ol3"]
+[ext_resource type="Texture2D" uid="uid://bhge7l4pu8mis" path="res://assets/gem.png" id="8_l74r2"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_pwrvu"]
+radius = 3.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_8k7k6"]
+radius = 3.6049912
+height = 12.206397
+
+[node name="Asteroid" type="Node2D"]
+script = ExtResource("1_8k7k6")
+textures = Array[Texture2D]([ExtResource("2_nbccl"), ExtResource("3_x26r3"), ExtResource("4_csaid"), ExtResource("5_kcpjf"), ExtResource("6_av5yq"), ExtResource("7_m4ol3")])
+metadata/broken = false
+
+[node name="RigidBody" type="RigidBody2D" parent="."]
+input_pickable = true
+contact_monitor = true
+max_contacts_reported = 1
+metadata/smashed = false
+
+[node name="Gem" type="Node2D" parent="RigidBody"]
+unique_name_in_owner = true
+
+[node name="Sprite2D" type="Sprite2D" parent="RigidBody/Gem"]
+texture = ExtResource("8_l74r2")
+
+[node name="Area2D" type="Area2D" parent="RigidBody/Gem"]
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody/Gem/Area2D"]
+scale = Vector2(0.8, 0.8)
+shape = SubResource("CircleShape2D_pwrvu")
+
+[node name="Sprite2D" type="Sprite2D" parent="RigidBody"]
+texture = ExtResource("5_kcpjf")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody"]
+rotation = 0.60562927
+scale = Vector2(2, 2)
+shape = SubResource("CapsuleShape2D_8k7k6")
+
+[connection signal="input_event" from="RigidBody" to="." method="_on_rigid_body_input_event"]
