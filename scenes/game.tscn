@@ -282,6 +282,11 @@ grow_vertical = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Control/CenterContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 9
+text = "Your goal is to smash trough asteroids by ramming them at speed 
+Move forward with 'w', back with 's', and left and right with 'a' and 'd' 
+Move gems into the station with your beam by pressing 'space'
+Do not loose the valuable asteroids, or yourself far away from the station
 
 [node name="Label" type="Label" parent="Control/CenterContainer/VBoxContainer"]
 layout_mode = 2

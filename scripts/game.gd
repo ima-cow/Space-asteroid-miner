@@ -23,7 +23,12 @@ func _ready() -> void:
 
 
 var time_out_of_play_area := 0
-func _process(delta: float) -> void:
+const MAX_TIME_OUT_OF_PLAY_AREA := 400
+func _process(_delta: float) -> void:
+	if $Control.visible == true and Input.is_action_just_pressed("left_click"):
+		$Control.visible = false
+		print("wow")
+	
 	if ship_lives < 0:
 		$LoseScreen.visible = true
 	if asteriods_left <= 0:
